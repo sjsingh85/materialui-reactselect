@@ -1,5 +1,5 @@
-import React from "react";
-import SelectControlContext from "./SelectControlContext";
+import React, {useContext} from "react";
+import {SelectControlContext} from "./index";
 
 const styles = hasValue => ({
   padding: hasValue ? "1px 0 3px" : "3px 0 5px",
@@ -19,34 +19,25 @@ const ControlComponent = props => {
     innerProps: { innerRef, ...otherInnerProps }
   } = props;
 
+  const state = useContext(SelectControlContext);
+
+  if (state.shrinkInputLabel !== (hasValue || isFocused)) {
+    state.triggerShrinkChange(hasValue || isFocused);
+  }
+
+  if (state.focusInputLabel !== isFocused) {
+    state.triggerFocusChange(isFocused);
+  }
+
   return (
-    <SelectControlContext.Consumer>
-      {({
-        shrinkInputLabel,
-        focusInputLabel,
-        triggerShrinkChange,
-        triggerFocusChange
-      }) => {
-        if (shrinkInputLabel !== (hasValue || isFocused)) {
-          triggerShrinkChange(hasValue || isFocused);
-        }
-
-        if (focusInputLabel !== isFocused) {
-          triggerFocusChange(isFocused);
-        }
-
-        return (
-          <div
-            className={cx("control", { isDisabled, isFocused })}
-            style={styles(hasValue)}
-            ref={innerRef}
-            {...otherInnerProps}
-          >
-            {children}
-          </div>
-        );
-      }}
-    </SelectControlContext.Consumer>
+    <div
+      className={cx('control', { isDisabled, isFocused })}
+      style={styles(hasValue)}
+      ref={innerRef}
+      {...otherInnerProps}
+    >
+      {children}
+    </div>
   );
 };
 

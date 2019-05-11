@@ -9,36 +9,46 @@ import ClearIndicator, { ClearIndicatorStyles } from "./ClearIndicator";
 import ControlComponent from "./ControlComponent";
 import MultiValue from "./MultiValue";
 
-function SelectWrapperComponent({ async, ...otherProps }) {
+const selectStyles = {
+  clearIndicator: ClearIndicatorStyles,
+  indicators: base => {
+    return { ...base };
+  },
+  valueContainer: ({ padding, ...otherBase }) => {
+    return { ...otherBase };
+  },
+  container: base => {
+    return { ...base, padding: 0 };
+  },
+  input: ({ margin, paddingBottom, paddingTop, ...otherBase }) => {
+    return { ...otherBase, color: 'rgba(0, 0, 0, 0.87)' };
+  },
+  placeholder: base => {
+    return {
+      ...base,
+      marginLeft: 0,
+      color: 'rgba(0, 0, 0, 0.54)'
+    };
+  },
+  singleValue: base => {
+    return { ...base, marginLeft: 0, color: 'rgba(0, 0, 0, 0.87)' };
+  },
+  control: base => {
+    return { ...base, padding: '6px 0 7px', display: 'flex' };
+  }
+};
+
+function NoResultsFound() {
+  return ("No results found");
+}
+
+function SelectWrapperComponent({ async, innerRef, ...otherProps }) {
   const Component = async ? Async : Select;
+
   return (
     <Component
-      styles={{
-        clearIndicator: ClearIndicatorStyles,
-        valueContainer: ({ padding, ...otherBase }) => {
-          return { ...otherBase };
-        },
-        container: base => {
-          return { ...base, padding: 0 };
-        },
-        input: ({ margin, paddingBottom, paddingTop, ...otherBase }) => {
-          return { ...otherBase, color: "rgba(0, 0, 0, 0.87)" };
-        },
-        placeholder: base => {
-          return {
-            ...base,
-            marginLeft: 0,
-            color: "rgba(0, 0, 0, 0.54)"
-          };
-        },
-        singleValue: base => {
-          return { ...base, marginLeft: 0, color: "rgba(0, 0, 0, 0.87)" };
-        },
-        control: base => {
-          return { ...base, padding: "6px 0 7px", display: "flex" };
-        }
-      }}
-      noOptionsMessage={() => "No results found"}
+      styles={selectStyles}
+      noOptionsMessage={NoResultsFound}
       components={{
         Option: ({ innerRef, ...props }) => {
           return (
